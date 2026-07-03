@@ -30,8 +30,7 @@ body{
     margin:0;
     height:100%;
     overflow:hidden;
-    font-family:Arial, Helvetica, sans-serif;
-    background:#f5f5f5;
+    font-family:Arial,Helvetica,sans-serif;
 }
 
 iframe{
@@ -40,113 +39,69 @@ iframe{
     border:none;
 }
 
-/* ===========================
-   INSTALL POPUP
-=========================== */
+/* Floating Install Button */
 
-#installPopup{
+#installFab{
 
     position:fixed;
 
-    left:16px;
-    right:16px;
+    right:20px;
+
     bottom:20px;
 
-    background:#ffffff;
+    background:#00695C;
 
-    border-radius:18px;
+    color:#fff;
 
-    padding:18px;
+    border:none;
 
-    box-shadow:0 10px 35px rgba(0,0,0,.25);
+    border-radius:999px;
+
+    padding:14px 20px;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+    cursor:pointer;
 
     display:none;
 
     z-index:99999;
 
-    animation:slideUp .35s ease;
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+
+    transition:.25s;
+
+    animation:pulse 2s infinite;
 
 }
 
-#installPopup h3{
+#installFab:hover{
 
-    margin:0;
-
-    color:#00695C;
-
-    font-size:20px;
+    transform:translateY(-2px);
 
 }
 
-#installPopup p{
+@keyframes pulse{
 
-    margin:10px 0 18px;
+0%{
 
-    color:#555;
-
-    line-height:1.5;
-
-    font-size:15px;
+box-shadow:0 0 0 0 rgba(0,105,92,.6);
 
 }
 
-.install-buttons{
+70%{
 
-    display:flex;
-
-    gap:10px;
+box-shadow:0 0 0 15px rgba(0,105,92,0);
 
 }
 
-.install-buttons button{
+100%{
 
-    flex:1;
-
-    border:none;
-
-    border-radius:10px;
-
-    padding:14px;
-
-    font-size:15px;
-
-    cursor:pointer;
+box-shadow:0 0 0 0 rgba(0,105,92,0);
 
 }
-
-#installNow{
-
-    background:#00695C;
-
-    color:white;
-
-    font-weight:bold;
-
-}
-
-#laterBtn{
-
-    background:#eeeeee;
-
-}
-
-@keyframes slideUp{
-
-    from{
-
-        transform:translateY(80px);
-
-        opacity:0;
-
-    }
-
-    to{
-
-        transform:translateY(0);
-
-        opacity:1;
-
-    }
 
 }
 
@@ -156,51 +111,24 @@ iframe{
 
 <body>
 
-<iframe src="https://script.google.com/macros/s/AKfycbyNS-OpuyG0qthrHMT80_l7SN1_i_-3gtpT7UqgvxHTK0QJLqSY46VI_qZyZTqo0k_k/exec"></iframe>
+<iframe
+src="https://script.google.com/macros/s/AKfycbyNS-OpuyG0qthrHMT80_l7SN1_i_-3gtpT7UqgvxHTK0QJLqSY46VI_qZyZTqo0k_k/exec">
+</iframe>
 
-
-<div id="installPopup">
-
-    <h3>📱 Install Portal Al Mabrur</h3>
-
-    <p>
-        Install aplikasi agar lebih cepat dibuka,
-        tampil fullscreen, dan seperti aplikasi Android.
-    </p>
-
-    <div class="install-buttons">
-
-        <button id="laterBtn">
-            Nanti
-        </button>
-
-        <button id="installNow">
-            Install
-        </button>
-
-    </div>
-
-</div>
+<button id="installFab">
+📱 Install App
+</button>
 
 <script>
 
 let deferredPrompt;
 
-const popup=document.getElementById("installPopup");
+const installFab=document.getElementById("installFab");
 
-const installBtn=document.getElementById("installNow");
+function isInstalled(){
 
-const laterBtn=document.getElementById("laterBtn");
-
-const THREE_DAYS=3*24*60*60*1000;
-
-function canShowPopup(){
-
-    const last=localStorage.getItem("installLater");
-
-    if(!last) return true;
-
-    return Date.now()-Number(last)>THREE_DAYS;
+    return window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone===true;
 
 }
 
@@ -210,43 +138,55 @@ window.addEventListener("beforeinstallprompt",(e)=>{
 
     deferredPrompt=e;
 
-    if(canShowPopup()){
+    if(!isInstalled()){
 
-        popup.style.display="block";
+        installFab.style.display="block";
 
     }
 
 });
 
-installBtn.onclick=async()=>{
+installFab.onclick=async()=>{
 
-    if(!deferredPrompt) return;
+    if(deferredPrompt){
 
-    deferredPrompt.prompt();
+        deferredPrompt.prompt();
 
-    const result=await deferredPrompt.userChoice;
+        await deferredPrompt.userChoice;
 
-    deferredPrompt=null;
+        deferredPrompt=null;
 
-    popup.style.display="none";
+        installFab.style.display="none";
 
-};
+    }else{
 
-laterBtn.onclick=()=>{
+        alert(
+`Cara Install
 
-    localStorage.setItem("installLater",Date.now());
+1. Tekan menu ⋮ Chrome
 
-    popup.style.display="none";
+2. Pilih "Install App"
+
+atau
+
+"Tambahkan ke layar utama".`
+);
+
+    }
 
 };
 
 window.addEventListener("appinstalled",()=>{
 
-    popup.style.display="none";
-
-    localStorage.removeItem("installLater");
+    installFab.style.display="none";
 
 });
+
+if(isInstalled()){
+
+    installFab.style.display="none";
+
+}
 
 </script>
 

@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Portal Al Mabrur</title>
-
 <link rel="manifest" href="manifest.json">
-
 <meta name="theme-color" content="#00695C">
-
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 
@@ -24,95 +18,53 @@ if ('serviceWorker' in navigator) {
 </script>
 
 <style>
-
-html,
-body{
-    margin:0;
-    height:100%;
-    overflow:hidden;
-    font-family:Arial,Helvetica,sans-serif;
-}
-
-iframe{
-    width:100%;
-    height:100%;
-    border:none;
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 /* Floating Install Button */
-
-#installFab{
-
-    position:fixed;
-
-    right:20px;
-
-    bottom:20px;
-
-    background:#00695C;
-
-    color:#fff;
-
-    border:none;
-
-    border-radius:999px;
-
-    padding:14px 20px;
-
-    font-size:15px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-
-    display:none;
-
-    z-index:99999;
-
-    box-shadow:0 8px 20px rgba(0,0,0,.25);
-
-    transition:.25s;
-
-    animation:pulse 2s infinite;
-
+#installFab {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: #00695C;
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+    z-index: 99999;
+    box-shadow: 0 8px 20px rgba(0,0,0,.25);
+    transition: .25s;
+    animation: pulse 2s infinite;
 }
 
-#installFab:hover{
-
-    transform:translateY(-2px);
-
+#installFab:hover {
+    transform: translateY(-2px);
 }
 
-@keyframes pulse{
-
-0%{
-
-box-shadow:0 0 0 0 rgba(0,105,92,.6);
-
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0,105,92,.6); }
+    70% { box-shadow: 0 0 0 15px rgba(0,105,92,0); }
+    100% { box-shadow: 0 0 0 0 rgba(0,105,92,0); }
 }
-
-70%{
-
-box-shadow:0 0 0 15px rgba(0,105,92,0);
-
-}
-
-100%{
-
-box-shadow:0 0 0 0 rgba(0,105,92,0);
-
-}
-
-}
-
 </style>
-
 </head>
 
 <body>
 
-<iframe
-src="https://script.google.com/macros/s/AKfycbyNS-OpuyG0qthrHMT80_l7SN1_i_-3gtpT7UqgvxHTK0QJLqSY46VI_qZyZTqo0k_k/exec">
+<!-- INI ADALAH IFRAME BARU YANG SUDAH DI-UPDATE -->
+<iframe 
+    src="https://script.google.com/macros/s/AKfycbzpR8jY1XZIeBmhiH7DI5QZlxe9EissoOm4HpNUqF1tMmxPHg9Z2jm1vTER3pXK78PX/exec" 
+    sandbox="allow-top-navigation allow-scripts allow-forms allow-same-origin allow-popups"
+    allow="camera; microphone; fullscreen"
+    style="width: 100%; height: 100%; border: none;">
 </iframe>
 
 <button id="installFab">
@@ -120,76 +72,40 @@ src="https://script.google.com/macros/s/AKfycbyNS-OpuyG0qthrHMT80_l7SN1_i_-3gtpT
 </button>
 
 <script>
-
 let deferredPrompt;
+const installFab = document.getElementById("installFab");
 
-const installFab=document.getElementById("installFab");
-
-function isInstalled(){
-
-    return window.matchMedia('(display-mode: standalone)').matches
-    || window.navigator.standalone===true;
-
+function isInstalled() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 }
 
-window.addEventListener("beforeinstallprompt",(e)=>{
-
+window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
-
-    deferredPrompt=e;
-
+    deferredPrompt = e;
     if(!isInstalled()){
-
-        installFab.style.display="block";
-
+        installFab.style.display = "block";
     }
-
 });
 
-installFab.onclick=async()=>{
-
+installFab.onclick = async () => {
     if(deferredPrompt){
-
         deferredPrompt.prompt();
-
         await deferredPrompt.userChoice;
-
-        deferredPrompt=null;
-
-        installFab.style.display="none";
-
-    }else{
-
-        alert(
-`Cara Install
-
-1. Tekan menu ⋮ Chrome
-
-2. Pilih "Install App"
-
-atau
-
-"Tambahkan ke layar utama".`
-);
-
+        deferredPrompt = null;
+        installFab.style.display = "none";
+    } else {
+        alert(`Cara Install\n\n1. Tekan menu ⋮ Chrome\n2. Pilih "Install App"\natau\n"Tambahkan ke layar utama".`);
     }
-
 };
 
-window.addEventListener("appinstalled",()=>{
-
-    installFab.style.display="none";
-
+window.addEventListener("appinstalled", () => {
+    installFab.style.display = "none";
 });
 
 if(isInstalled()){
-
-    installFab.style.display="none";
-
+    installFab.style.display = "none";
 }
-
 </script>
 
 </body>
-
 </html>
